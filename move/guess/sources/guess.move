@@ -4,29 +4,28 @@ module guess::guess{
     use std::debug;
     use sui::clock::{Self, Clock};
 
-    const EInvalidNumber: u64 = 0;
-    struct GameResult has drop,copy{
-        your_number: u64,
-        computer_number: u64,
+    struct Result has drop,copy{
+        number: u64,
+        aim_number: u64,
         result: string::String
     }
 
     public fun play(number: u64, clock: &Clock){
-        assert!(number < 10,EInvalidNumber);
-        let computer_number = get_random(9,clock);
-        let resultstr = if (number == computer_number) {
+        let aim_number = get_random(9, clock);
+
+        let resultstr = if (number == aim_number) {
             string::utf8(b"tie")
-        } else if (number > computer_number) {
-            string::utf8(b"you win")
+        } else if (number > aim_number) {
+            string::utf8(b"win")
         } else {
-            string::utf8(b"you lose")
+            string::utf8(b"lose")
         };
-        let result = GameResult {
-            your_number: number,
-            computer_number: computer_number,
+
+        event::emit(Result {
+            number: number,
+            aim_number: aim_number,
             result: resultstr
-        };
-        event::emit(result);
+        });
     }
 
     public fun get_random(max: u64, clock: &Clock):u64{

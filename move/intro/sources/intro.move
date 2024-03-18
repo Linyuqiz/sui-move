@@ -19,9 +19,4 @@ module intro::intro {
         };
         transfer::public_transfer(object, tx_context::sender(ctx));
     }
-
-    public fun look(profile: &Intro, ctx: &mut TxContext): String {
-        assert!(profile.user == tx_context::sender(ctx), 0);
-        profile.desc
-    }
 }

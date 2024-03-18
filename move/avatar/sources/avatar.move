@@ -7,7 +7,7 @@ module avatar::avatar {
     use std::string::utf8;
     struct AVATAR has drop {}
 
-    struct GithubNFT has key,store{
+    struct AvatarNFT has key,store{
         id: UID,
         tokenId: u64,
         githubName: std::ascii::String,
@@ -37,7 +37,7 @@ module avatar::avatar {
         ];
 
         let publisher = package::claim(witness,ctx);
-        let display = display::new_with_fields<GithubNFT>(&publisher, keys, values, ctx);
+        let display = display::new_with_fields<AvatarNFT>(&publisher, keys, values, ctx);
         display::update_version(&mut display);
         transfer::public_transfer(publisher, tx_context::sender(ctx));
         transfer::public_transfer(display, tx_context::sender(ctx));
@@ -53,7 +53,7 @@ module avatar::avatar {
         let sender = tx_context::sender(ctx);
         state.count = state.count + 1;
 
-        let nft = GithubNFT {
+        let nft = AvatarNFT {
             id: object::new(ctx),
             tokenId: state.count,
             githubName: github_name,
@@ -61,8 +61,4 @@ module avatar::avatar {
         };
         transfer::public_transfer(nft, sender);
     }
-
-    public entry fun update_name(nft: &mut GithubNFT,github_name:std::ascii::String) {
-        nft.githubName = github_name;
-    }    
 }
