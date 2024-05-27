@@ -5,17 +5,13 @@ module hello::Hello {
 
     public struct Hello has key, store {
         id: UID,
-        address: address,
         content: String
     }
 
     fun init(ctx: &mut TxContext) {
-        let hello = Hello {
+        transfer(Hello {
             id: object::new(ctx),
-            address: tx_context::sender(ctx),
             content: string(b"Hello, Move!"),
-        };
-        
-        transfer(hello, tx_context::sender(ctx))
+        }, tx_context::sender(ctx))
     }
 }
